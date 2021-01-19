@@ -1,0 +1,15 @@
+
+Version 1.0
+-----------
+
+ - Hard Fork of: "gumbo-query" https://github.com/lazytiger/gumbo-query
+
+ - Fixed a number of query related bug impacting nth and type pseudoclasses
+
+ - Added support for :root and :lang() pseudoclasses
+
+ - With proper exception handling to detect and report parser errors to caller
+
+ - assembled and edited a large test data base which can be run
+   using the built querytester
+

@@ -1,0 +1,762 @@
+!  Portions Copyright (c) 2021 Kevin B. Hendricks, Stratford, ON Canada
+!  Portions Copyright (c) 2015 Jesse Nicholson
+!  Portions Copyright (c) 2006, Nie;s Leenheer - under a BSD-like License
+!
+!  Uses Ascii Unit Separator (USEP) 0x1f and Ascii Record Separator (RSEP) 0x1e
+!  Format: Test# USEP Selector USEP XMatches USEP PageHTML RSEP \n
+!
+!  Permission is hereby granted, free of charge, to any person obtaining a copy
+!  of this software and associated documentation files (the "Software"), to deal
+!  in the Software without restriction, including without limitation the rights
+!  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+!  copies of the Software, and to permit persons to whom the Software is
+!  furnished to do so, subject to the following conditions:
+!
+!  The above copyright notice and this permission notice shall be included in
+!  all copies or substantial portions of the Software.
+!
+!  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+!  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+!  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+!  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+!  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+!  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+!  THE SOFTWARE.
+
+0#SomeNormalId1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Id Selector</title> </head> <body> <div id="SomeNormalId">PASS</div> <div id="SomeAbnormalId">FAIL</div> </body> </html>
+1.SomeNormalClass1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Class Selector</title> </head> <body> <div class="SomeNormalClass">PASS</div> <div class="SomeAbnormalClass">FAIL</div> </body> </html>
+2[attribute-equals="SomeNormalAttribute"]1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Attribute Selector Equals</title> </head> <body> <div attribute-equals="SomeNormalAttribute">PASS</div> <div attribute-equals="SomeAbormalAttribute">FAIL</div> </body> </html>
+3[attribute-begins-with^="SomeN"]2<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Attribute Selector Begins With</title> </head> <body> <div attribute-begins-with="SomeNormalAttribute">PASS</div> <div attribute-begins-with="SomeNotNormalAttribute">PASS</div> <div attribute-begins-with="SomeAbnormalAttribute">FAIL</div> </body> </html>
+4[attribute-ends-with$="bute"]1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Attribute Selector Ends With</title> </head> <body> <div attribute-ends-with="SomeNormalAttribote">FAIL</div> <div attribute-ends-with="SomeNotNormalThing">FAIL</div> <div attribute-ends-with="SomeAbnormalAttribute">PASS</div> </body> </html>
+5[attribute-contains*="Not"]1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Attribute Selector Contains</title> </head> <body> <div attribute-contains="SomeNormalAttribote">FAIL</div> <div attribute-contains="SomeNotNormalThing">PASS</div> <div attribute-contains="SomeAbnormalAttribute">FAIL</div> </body> </html>
+6[attribute-hypen-list-starts-with|="this"]3<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Attribute Selector Hyphen Separated List Starting With Or Equal</title> </head> <body> <div attribute-hypen-list-starts-with="this-is-a-list">PASS</div> <div attribute-hypen-list-starts-with="this is a-list">FAIL</div> <div attribute-hypen-list-starts-with="this-is a list">PASS</div> <div attribute-hypen-list-starts-with="this">PASS</div> </body> </html>
+7[attribute-whitespace-list-contains~="is"]2<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Attribute Selector Whitespace Separated List Containing Exact Entry</title> </head> <body> <div attribute-whitespace-list-contains="this-is-a-list">FAIL</div> <div attribute-whitespace-list-contains="this is a-list">PASS</div> <div attribute-whitespace-list-contains="this-is a list">FAIL</div>  <div attribute-whitespace-list-contains="is">PASS</div> </body> </html>
+8div:not(.cool)1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Not Selector</title> </head> <body> <div class="too cool for skool">FAIL</div> <div class="too uncool to quit school">PASS</div> </body> </html>
+9div:has(p)5<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Has-Descendant Selector</title> </head> <body> <div class="something"><div><div><p>PASS</p></div></div></div> <div class="something"><div><p>PASS</p></div></div> <div class="nothing">FAIL</div> </body> </html>
+10:haschild(p)2<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Has-Child Selector</title> </head> <body> <div class="something"><p>PASS</p></div> <div class="something"><div><p>PASS</p></div>FAIL</div> <div class="nothing">FAIL</div> </body> </html>
+11:contains("something juicy")8<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Contains Selector</title> </head> <body> <div>I'd love something juicy.</div> <div><div><p>I'd love someThInG jUicY.</p></div></div> <div>I'd love some juicy fruit.</div> </body> </html>
+12:containsown("something juicy")2<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Contains-Own Selector</title> </head> <body> <div>I'd love something juicy.</div> <div><div><p>I'd love someThInG jUicY.</p></div></div> <div>I'd love some juicy fruit.</div> </body> </html>
+!13:matches("([^\s]+) juic*")4<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Matches Selector</title> </head> <body> <div>I'd love something juicy.</div> <div><div><p>I'd love someThInG jUicY.</p></div></div> <div>I'd love some juicy fruit.</div> </body> </html>
+!14:matchesOwn("([^\s]+) jUiC*")1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Matches-Own Selector</title> </head> <body> <div>I'd love something juicy.</div> <div><div><p>I'd love someThInG jUicY.</p></div></div> <div>I'd love some juicy fruit.</div> </body> </html>
+15li:nth-child(3n+2)2<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Nth-Child Pseudo Class Selector</title> </head> <body> <div> <ul> <li>FAIL</li> <li>PASS</li> <li>FAIL</li> <li>FAIL</li> <li> Should Match </li> </ul> </div> </body> </html>
+16li:nth-last-child(2)1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Nth-Last-Child Pseudo Class Selector</title> </head> <body> <div> <ul> <li>FAIL</li> <li>FAIL</li> <li>FAIL</li> <li>PASS</li> <li>FAIL</li> </ul> </div> </body> </html>
+17div:nth-of-type(2)1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Nth-Of-Type Pseudo Class Selector</title> </head> <body> <ul> <li> <div>FAIL</div> <div>PASS</div> <div>FAIL</div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+18div:nth-last-of-type(2)1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Nth-Last-Of-Type Pseudo Class Selector</title> </head> <body> <ul> <li> <div>FAIL</div> <div>FAIL</div> <div>PASS</div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+19div:first-child1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>First-Child Pseudo Class Selector</title> </head> <body> <ul> <li> <div>PASS</div> <div>FAIL</div> <div>FAIL</div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+20div:last-child1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Last-Child Pseudo Class Selector</title> </head> <body> <ul> <li> <div>FAIL</div> <div>FAIL</div> <div>FAIL</div> <p>FAIL</p> <div>PASS</div> </li> </ul> </body> </html>
+21div:first-of-type1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>First-Of-Type Pseudo Class Selector</title> </head> <body> <ul> <li> <div>PASS</div> <div>FAIL</div> <div>FAIL</div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+22div:last-of-type1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Last-Of-Type Pseudo Class Selector</title> </head> <body> <ul> <li> <div>FAIL</div> <div>FAIL</div> <div>FAIL</div> <div>PASS</div> <p>FAIL</p> </li> </ul> </body> </html>
+23div:only-child1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Only-Child Pseudo Class Selector</title> </head> <body> <ul> <li> <div> <div>PASS</div> </div> <div>FAIL</div> <div> <div>FAIL</div> <div>FAIL</div> </div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+24div:only-of-type1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Only-Of-Type Pseudo Class Selector</title> </head> <body> <ul> <li> <div> <p>FAIL</p> <p>FAIL</p> <div>PASS</div> <p>FAIL</p> </div> <div>FAIL</div> <div> <div>FAIL</div> <div>FAIL</div> </div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+25:empty3<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Empty Pseudo Class Selector</title> </head> <body> <ul> <li> <div> <p></p> <p>FAIL</p> <div></div> <p>FAIL</p> </div> <div>FAIL</div> <div> <div>FAIL</div> <div>FAIL</div> </div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+26div + div[class="sibling"]1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Adjacent Selector</title> </head> <body> <ul> <li> <div> <p>FAIL</p> <p>FAIL</p> <div>FAIL</div> <p>FAIL</p> </div> <div>FAIL</div> <div> <div>FAIL</div> <div class="sibling">PASS</div> <p>FAIL</p> <div class="sibling">FAIL</div> </div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+27div ~ div[class="sibling"]2<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Sibling Selector</title> </head> <body> <ul> <li> <div> <p>FAIL</p> <p>FAIL</p> <div>FAIL</div> <p>FAIL</p> </div> <div>FAIL</div> <div> <div>FAIL</div> <div class="sibling">PASS</div> <p>FAIL</p> <div class="sibling">PASS</div> </div> <div>FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+28div > div[class="child"]1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Child Selector</title> </head> <body> <ul> <li> <div> <p>FAIL</p> <p>FAIL</p> <div>FAIL</div> <p>FAIL</p> </div> <div>FAIL</div> <div> <div>FAIL</div> <div class="child">PASS</div> </div> <div>FAIL</div> <div class="sibling">FAIL</div> <p>FAIL</p> </li> </ul> </body> </html>
+29ul div[class="descendant"]1<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Descendant Selector</title> </head> <body> <ul> <li> <div> <p>FAIL</p> <p>FAIL</p> <div>FAIL</div> <p>FAIL</p> </div> <div>FAIL</div> <div> <div>FAIL</div> <div class="sibling">FAIL</div> </div> <div>FAIL</div> <div class="sibling">FAIL</div> <p>FAIL</p> <p> <ul> <li> <div class="descendant">PASS</div> </li> </ul> </p> </li> </ul> </body> </html>
+30ul li div[class="descendant"]2<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Descendant Selector</title> </head> <body> <ul> <li> <div> <p>FAIL</p> <p>FAIL</p> <div>FAIL</div> <p>FAIL</p> </div> <div>FAIL</div> <div> <div>FAIL</div> <div class="sibling">FAIL</div> </div> <div>FAIL</div> <div class="sibling">FAIL</div> <p>FAIL</p> <p> <ul> <li> <div class="descendant">PASS</div> </li> <div class="descendant">PASS</div> <div class="chump">FAIL</div> </ul> </p> </li> </ul> </body> </html>
+31p, div[class="descendant"]5<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <title>Descendant Selector</title> </head> <body> <ul> <li> <div> <p>PASS</p> <p>PASS</p> <div>FAIL</div> <p>PASS</p> </div> <div>FAIL</div> <div> <div>FAIL</div> <div class="sibling">FAIL</div> </div> <div>FAIL</div> <div class="sibling">FAIL</div> <p>PASS</p> <ul> <li> <div class="descendant">PASS</div> </li> </ul> </li> </ul> </body> </html>
+32h1 a.special1<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Descendent Test</title></head><body><h1><a>FAIL</a><a class="special">PASS</a></h1></body></html>
+33span[id="that's"]1<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Quotes In ids</title></head><body><div><span id="that's">PASS</span>FAIL</div></body></html>
+34h1 a1<!DOCTYPE html><head><meta charset="utf-8"/><title>Descendent Test</title></head><body><h1><a>PASS</a></h1></body></html>
+35.chapter > p:first-child:first-of-type1<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Child and Pseudo Test</title></head><body><div class="chapter"><p class="flush">PASS</p><p>FAIL</p></div></html>
+36p.flush:lang(it)1<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>Lang Test</title></head><body><div lang="it" class="chapter"><p class="flush">PASS</p><p>FAIL</p></div></html>
+37h1 + p1<!DOCTYPE html><html><head><title>E + F 1 </title></head><body><h1></h1> <p></p></body></html>
+!The CSS selector should match the paragraph because the header is directly adjecent to the paragraph
+38h1 + p0<!DOCTYPE html><html><head><title>E + F 2 </title></head><body><h1></h1> <h2></h2> <p></p></body></html>
+!The CSS selector should not match the paragraph because the header is in front of, but not directly adjecent to the paragraph
+39h1 + p0<!DOCTYPE html><html><head><title>E + F 3 </title></head><body><p></p> <h1></h1></body></html>
+!The CSS selector should not match the paragraph because the header is not in front of the paragraph
+40div[align^=left]1<!DOCTYPE html><html><head><title>E[attribute^=value] 1 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+41div[align^=left]0<!DOCTYPE html><html><head><title>E[attribute^=value] 2 </title></head><body><div align='LEFT'></div></body></html>
+!The CSS selector should NOT match the HTML fragment because the value of the align attribute should be case sensitive in an XHTML document
+42div[align^=left]1<!DOCTYPE html><html><head><title>E[attribute^=value] 3 </title></head><body><div ALIGN='left'></div></body></html>
+!The CSS selector should match the HTML fragment because attribute names should be case insensitive in a HTML document
+43div[align^=left]1<!DOCTYPE html><html><head><title>E[attribute^=value] 4 </title></head><body><div align='leftright'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute starts as expected
+44div[align^=left]1<!DOCTYPE html><html><head><title>E[attribute^=value] 5 </title></head><body><div align='left right'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute starts as expected
+45div[align^=left]1<!DOCTYPE html><html><head><title>E[attribute^=value] 6 </title></head><body><div align='left-right'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute starts as expected
+46div[align^=left]0<!DOCTYPE html><html><head><title>E[attribute^=value] 7 </title></head><body><div align='right'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute is different
+47div[align^=left]0<!DOCTYPE html><html><head><title>E[attribute^=value] 8 </title></head><body><div align='rightleft'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute starts differently
+48div[align^=left]0<!DOCTYPE html><html><head><title>E[attribute^=value] 9 </title></head><body><div align='right left'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute should not be interpreted as a space seperated list
+49div[align^=left]0<!DOCTYPE html><html><head><title>E[attribute^=value] 10 </title></head><body><div align='right-left'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute should not be interpreted as two components seperated by as dash
+50div[align^=left]0<!DOCTYPE html><html><head><title>E[attribute^=value] 11 </title></head><body><div align=''></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute is empty
+51div[align^=left]0<!DOCTYPE html><html><head><title>E[attribute^=value] 12 </title></head><body><div></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute does not exist
+52div[align ^= left]1<!DOCTYPE html><html><head><title>E[attribute^=value] 13 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+53div[align ^=left]1<!DOCTYPE html><html><head><title>E[attribute^=value] 14 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+54div[align^= left]1<!DOCTYPE html><html><head><title>E[attribute^=value] 15 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+55div[title^=match]1<!DOCTYPE html><html><head><title>E[attribute^=value] 16 </title></head><body><div title='match'></div></body></html>
+!The CSS selector should match the HTML fragment because the value of the title attribute is an exact match
+56div[title^=match]0<!DOCTYPE html><html><head><title>E[attribute^=value] 17 </title></head><body><div title='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the title attribute should be compared in a case-sensitive way
+57div[id^=match]0<!DOCTYPE html><html><head><title>E[attribute^=value] 18 </title></head><body><div id='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the id attribute should be compared in a case-sensitive way
+58label[for^=match]0<!DOCTYPE html><html><head><title>E[attribute^=value] 19 </title></head><body><label for='MATCH'></label></body></html>
+!The CSS selector should not match the HTML fragment because value of the for attribute should be compared in a case-sensitive way
+59div[align^=left]0<!DOCTYPE html><html><head><title>E[attribute^=value] 20 </title></head><body><div align=' left '></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute begins different - it is not allowed to strip whitespace in HTML documents
+60div[align*=left]1<!DOCTYPE html><html><head><title>E[attribute*=value] 1 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+61div[align*=left]0<!DOCTYPE html><html><head><title>E[attribute*=value] 2 </title></head><body><div align='LEFT'></div></body></html>
+!The CSS selector should not match the XHTML fragment because the value of the align attribute should be case sensitive in a XHTML document
+62div[align*=left]1<!DOCTYPE html><html><head><title>E[attribute*=value] 3 </title></head><body><div ALIGN='left'></div></body></html>
+!The CSS selector should match the HTML fragment because attribute names should be case insensitive in a HTML document
+63div[align*=left]1<!DOCTYPE html><html><head><title>E[attribute*=value] 4 </title></head><body><div align='leftright'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute starts as expected
+64div[align*=left]1<!DOCTYPE html><html><head><title>E[attribute*=value] 5 </title></head><body><div align='rightleft'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute ends as expected
+65div[align*=left]1<!DOCTYPE html><html><head><title>E[attribute*=value] 6 </title></head><body><div align='rightleftcenter'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute contains the expected value
+66div[align*=left]0<!DOCTYPE html><html><head><title>E[attribute*=value] 7 </title></head><body><div align='right'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute is different
+67div[align*=left]0<!DOCTYPE html><html><head><title>E[attribute*=value] 8 </title></head><body><div align=''></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute is empty
+68div[align*=left]0<!DOCTYPE html><html><head><title>E[attribute*=value] 9 </title></head><body><div></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute does not exist
+69div[align *= left]1<!DOCTYPE html><html><head><title>E[attribute*=value] 10 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+70div[align *=left]1<!DOCTYPE html><html><head><title>E[attribute*=value] 11 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+71div[align*= left]1<!DOCTYPE html><html><head><title>E[attribute*=value] 12 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+72div[title*=match]1<!DOCTYPE html><html><head><title>E[attribute*=value] 13 </title></head><body><div title='match'></div></body></html>
+!The CSS selector should match the HTML fragment because the value of the title attribute is an exact match
+73div[title*=match]0<!DOCTYPE html><html><head><title>E[attribute*=value] 14 </title></head><body><div title='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the title attribute should be compared in a case-sensitive way
+74div[id*=match]0<!DOCTYPE html><html><head><title>E[attribute*=value] 15 </title></head><body><div id='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the id attribute should be compared in a case-sensitive way
+75label[for*=match]0<!DOCTYPE html><html><head><title>E[attribute*=value] 16 </title></head><body><label for='MATCH'></label></body></html>
+!The CSS selector should not match the HTML fragment because value of the for attribute should be compared in a case-sensitive way
+76div[align$=left]1<!DOCTYPE html><html><head><title>E[attribute$=value] 1 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+77div[align$=left]0<!DOCTYPE html><html><head><title>E[attribute$=value] 2 </title></head><body><div align='LEFT'></div></body></html>
+!The CSS selector should not match the XHTML fragment because the value of the align attribute should be case sensitive in a XHTML document
+78div[align$=left]1<!DOCTYPE html><html><head><title>E[attribute$=value] 3 </title></head><body><div ALIGN='left'></div></body></html>
+!The CSS selector should match the HTML fragment because attribute names should be case insensitive in a HTML document
+79div[align$=left]1<!DOCTYPE html><html><head><title>E[attribute$=value] 4 </title></head><body><div align='rightleft'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute ends as expected
+80div[align$=left]1<!DOCTYPE html><html><head><title>E[attribute$=value] 5 </title></head><body><div align='right left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute ends as expected
+81div[align$=left]1<!DOCTYPE html><html><head><title>E[attribute$=value] 6 </title></head><body><div align='right-left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute ends as expected
+82div[align$=left]0<!DOCTYPE html><html><head><title>E[attribute$=value] 7 </title></head><body><div align='right'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute is different
+83div[align$=left]0<!DOCTYPE html><html><head><title>E[attribute$=value] 8 </title></head><body><div align='leftright'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute ends differently
+84div[align$=left]0<!DOCTYPE html><html><head><title>E[attribute$=value] 9 </title></head><body><div align='left right'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute should not be interpreted as a space seperated list
+85div[align$=left]0<!DOCTYPE html><html><head><title>E[attribute$=value] 10 </title></head><body><div align='left-right'></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute should not be interpreted as two components seperated by as dash
+86div[align$=left]0<!DOCTYPE html><html><head><title>E[attribute$=value] 11 </title></head><body><div align=''></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute is empty
+87div[align$=left]0<!DOCTYPE html><html><head><title>E[attribute$=value] 12 </title></head><body><div></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute does not exist
+88div[align $= left]1<!DOCTYPE html><html><head><title>E[attribute$=value] 13 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+89div[align $=left]1<!DOCTYPE html><html><head><title>E[attribute$=value] 14 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+90div[align$= left]1<!DOCTYPE html><html><head><title>E[attribute$=value] 15 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+91div[title^=match]1<!DOCTYPE html><html><head><title>E[attribute$=value] 16 </title></head><body><div title='match'></div></body></html>
+!The CSS selector should match the HTML fragment because the value of the title attribute is an exact match
+92div[title^=match]0<!DOCTYPE html><html><head><title>E[attribute$=value] 17 </title></head><body><div title='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the title attribute should be compared in a case-sensitive way
+93div[id$=match]0<!DOCTYPE html><html><head><title>E[attribute$=value] 18 </title></head><body><div id='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the id attribute should be compared in a case-sensitive way
+94label[for$=match]0<!DOCTYPE html><html><head><title>E[attribute$=value] 19 </title></head><body><label for='MATCH'></label></body></html>
+!The CSS selector should not match the HTML fragment because value of the for attribute should be compared in a case-sensitive way
+95div[align$=left]0<!DOCTYPE html><html><head><title>E[attribute$=value] 20 </title></head><body><div align=' left '></div></body></html>
+!The CSS selector should not match the HTML fragment because the align attribute ends different - it is not allowed to strip whitespace in HTML documents
+96div[align=left]1<!DOCTYPE html><html><head><title>E[attribute=value] 1 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+97div[align=left]1<!DOCTYPE html><html><head><title>E[attribute=value] 2 </title></head><body><div ALIGN='left'></div></body></html>
+!The CSS selector should match the HTML fragment because attribute names should be case insensitive in a HTML document
+98div[align=left]0<!DOCTYPE html><html><head><title>E[attribute=value] 3 </title></head><body><div align='LEFT'></div></body></html>
+!The CSS selector should not match the XHTML fragment because the value of the align attribute should be case sensitive in a XHTML document
+99div[align=left]0<!DOCTYPE html><html><head><title>E[attribute=value] 4 </title></head><body><div align='leftorright'></div></body></html>
+!The CSS selector should not match the HTML fragment because the value of the align attribute is not an exact match
+100div[align=left]0<!DOCTYPE html><html><head><title>E[attribute=value] 5 </title></head><body><div align='rightleft'></div></body></html>
+!The CSS selector should not match the HTML fragment because the value of the align attribute is not an exact match
+101div[align=left]0<!DOCTYPE html><html><head><title>E[attribute=value] 6 </title></head><body><div align='right'></div></body></html>
+!The CSS selector should not match the HTML fragment because the value of the align attribute is completely different
+102div[align=left]0<!DOCTYPE html><html><head><title>E[attribute=value] 7 </title></head><body><div alignment='left'></div></body></html>
+!The CSS selector should not match the HTML fragment because the attribute does not exist
+103div[align=left]0<!DOCTYPE html><html><head><title>E[attribute=value] 8 </title></head><body><div verticalalign='left'></div></body></html>
+!The CSS selector should not match the HTML fragment because the attribute does not exist
+104div[align=left]0<!DOCTYPE html><html><head><title>E[attribute=value] 9 </title></head><body><div></div></body></html>
+!The CSS selector should not match the HTML fragment because the attribute does not exist
+105div[align = left]1<!DOCTYPE html><html><head><title>E[attribute=value] 10 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+106div[align =left]1<!DOCTYPE html><html><head><title>E[attribute=value] 11 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+107div[align= left]1<!DOCTYPE html><html><head><title>E[attribute=value] 12 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute has the correct value
+108div[title=match]1<!DOCTYPE html><html><head><title>E[attribute=value] 13 </title></head><body><div title='match'></div></body></html>
+!The CSS selector should match the HTML fragment because the value of the title attribute is an exact match
+109div[title=match]0<!DOCTYPE html><html><head><title>E[attribute=value] 14 </title></head><body><div title='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the title attribute should be compared in a case-sensitive way
+110div[id=match]0<!DOCTYPE html><html><head><title>E[attribute=value] 15 </title></head><body><div id='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the id attribute should be compared in a case-sensitive way
+111label[for=match]0<!DOCTYPE html><html><head><title>E[attribute=value] 16 </title></head><body><label for='MATCH'></label></body></html>
+!The CSS selector should not match the HTML fragment because value of the for attribute should be compared in a case-sensitive way
+112div[align=left]0<!DOCTYPE html><html><head><title>E[attribute=value] 17 </title></head><body><div align=' left '></div></body></html>
+!The CSS selector should not match the HTML fragment because the value of the align attribute is not an exact match - it is not allowed to strip whitespace in HTML documents
+113div[lang|=en]1<!DOCTYPE html><html><head><title>E[attribute|=value] 1 </title></head><body><div lang='en'></div></body></html>
+!The CSS selector should match the HTML fragment because the attribute is an exact match
+114div[lang|=en]0<!DOCTYPE html><html><head><title>E[attribute|=value] 2 </title></head><body><div lang='EN'></div></body></html>
+!The CSS selector should not match the XHTML fragment because the value of the lang attribute should be case sensitive in an XHTML document
+115div[lang|=en]1<!DOCTYPE html><html><head><title>E[attribute|=value] 3 </title></head><body><div LANG='en'></div></body></html>
+!The CSS selector should match the HTML fragment because the case of the attribute name should not matter in a HTML document
+116div[lang|=en]1<!DOCTYPE html><html><head><title>E[attribute|=value] 4 </title></head><body><div lang='en-US'></div></body></html>
+!The CSS selector should match the HTML fragment because the value before the hyphen is an exact match
+117div[lang|=en]1<!DOCTYPE html><html><head><title>E[attribute|=value] 5 </title></head><body><div lang='en-Nonsense'></div></body></html>
+!The CSS selector should match the HTML fragment because the value before the hyphen is an exact match
+118div[lang|=en]0<!DOCTYPE html><html><head><title>E[attribute|=value] 6 </title></head><body><div></div></body></html>
+!The CSS selector should not match the HTML fragment because the attribute is not present
+119div[lang|=en]0<!DOCTYPE html><html><head><title>E[attribute|=value] 7 </title></head><body><p lang='en'><div></div></p></body></html>
+!The CSS selector should not match the HTML fragment because the attribute is not present and it should not match inherited properties
+120div[lang|=en]0<!DOCTYPE html><html><head><title>E[attribute|=value] 8 </title></head><body><div lang=''></div></body></html>
+!The CSS selector should not match the HTML fragment because the attribute is empty
+121div[lang|=en]0<!DOCTYPE html><html><head><title>E[attribute|=value] 9 </title></head><body><div lang='nl'></div></body></html>
+!The CSS selector should not match the HTML fragment because the attribute does not contain the correct value
+122div[lang|=en]0<!DOCTYPE html><html><head><title>E[attribute|=value] 10 </title></head><body><div lang='english'></div></body></html>
+!The CSS selector should not match the HTML fragment because the attribute does not contain the correct value
+123div[lang|=en]0<!DOCTYPE html><html><head><title>E[attribute|=value] 11 </title></head><body><div lang='nl-en'></div></body></html>
+!The CSS selector should not match the HTML fragment because the part before the hyphen is not an exact match
+124div[lang |= en]1<!DOCTYPE html><html><head><title>E[attribute|=value] 12 </title></head><body><div lang='en'></div></body></html>
+!The CSS selector should match the HTML fragment because the attribute is an exact match
+125div[lang |=en]1<!DOCTYPE html><html><head><title>E[attribute|=value] 13 </title></head><body><div lang='en'></div></body></html>
+!The CSS selector should match the HTML fragment because the attribute is an exact match
+126div[lang|= en]1<!DOCTYPE html><html><head><title>E[attribute|=value] 14 </title></head><body><div lang='en'></div></body></html>
+!The CSS selector should match the HTML fragment because the attribute is an exact match
+127div[title|=match]1<!DOCTYPE html><html><head><title>E[attribute|=value] 15 </title></head><body><div title='match'></div></body></html>
+!The CSS selector should match the HTML fragment because the value of the title attribute is an exact match
+128div[title|=match]0<!DOCTYPE html><html><head><title>E[attribute|=value] 16 </title></head><body><div title='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the title attribute should be compared in a case-sensitive way
+129div[id|=match]0<!DOCTYPE html><html><head><title>E[attribute|=value] 17 </title></head><body><div id='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the id attribute should be compared in a case-sensitive way
+130label[for|=match]0<!DOCTYPE html><html><head><title>E[attribute|=value] 18 </title></head><body><label for='MATCH'></label></body></html>
+!The CSS selector should not match the HTML fragment because value of the for attribute should be compared in a case-sensitive way
+131div[lang|=en]0<!DOCTYPE html><html><head><title>E[attribute|=value] 19 </title></head><body><div lang=' en '></div></body></html>
+!The CSS selector should not match the HTML fragment because the attribute does not contain the correct value - it is not allowed to strip whitespace in HTML documents
+132div[align]1<!DOCTYPE html><html><head><title>E[attribute] 1 </title></head><body><div align='left'></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute is present and contains a value
+133div[align]1<!DOCTYPE html><html><head><title>E[attribute] 2 </title></head><body><div align=''></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute is present and is empty
+134div[align]1<!DOCTYPE html><html><head><title>E[attribute] 3 </title></head><body><div align></div></body></html>
+!The CSS selector should match the HTML fragment because the align attribute is present
+135div[align]1<!DOCTYPE html><html><head><title>E[attribute] 4 </title></head><body><div ALIGN='left'></div></body></html>
+!The CSS selector should match the HTML fragment because attributes names are case insensitive in HTML documents
+136div[align]0<!DOCTYPE html><html><head><title>E[attribute] 5 </title></head><body><div alignment='left'></div></body></html>
+!The CSS selector should not match the HTML fragment because it does not have the correct attribute
+137div[align]0<!DOCTYPE html><html><head><title>E[attribute] 6 </title></head><body><div verticalalign='left'></div></body></html>
+!The CSS selector should not match the HTML fragment because it does not have the correct attribute
+138div[align]0<!DOCTYPE html><html><head><title>E[attribute] 7 </title></head><body><div></div></body></html>
+!The CSS selector should not match the HTML fragment because it does not have the correct attribute
+139a[rel~=match]1<!DOCTYPE html><html><head><title>E[attribute~=value] 1 </title></head><body><a href='#' rel='match'></a></body></html>
+!The CSS selector should match the HTML fragment because the value of the rel attribute is an exact match
+140a[rel~=match]1<!DOCTYPE html><html><head><title>E[attribute~=value] 2 </title></head><body><a href='#' REL='match'></a></body></html>
+!The CSS selector should match the HTML fragment because the case of the attribute name should not matter in a HTML document
+141a[rel~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 3 </title></head><body><a href='#' rel='MATCH'></a></body></html>
+!The CSS selector should not match the XHTML fragment because the case of the rel attribute value does matter in a XHTML document
+142a[rel~=match]1<!DOCTYPE html><html><head><title>E[attribute~=value] 4 </title></head><body><a href='#' rel='other match'></a></body></html>
+!The CSS selector should match the HTML fragment because the attibute value contains a space seperated list, of which one of the items is an exact match
+143a[rel~=match]1<!DOCTYPE html><html><head><title>E[attribute~=value] 5 </title></head><body><a href='#' rel='match other'></a></body></html>
+!The CSS selector should match the HTML fragment because the attibute value contains a space seperated list, of which one of the items is an exact match
+144a[rel~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 6 </title></head><body><a href='#'></a></body></html>
+!The CSS selector should not match the HTML fragment because the attibute does not exist
+145a[rel~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 7 </title></head><body><a href='#' rel=''></a></body></html>
+!The CSS selector should not match the HTML fragment because the attibute is empty
+146a[rel~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 8 </title></head><body><a href='#' rel='other'></a></body></html>
+!The CSS selector should not match the HTML fragment because the attibute does not contain an exact match
+147a[rel~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 9 </title></head><body><a href='#' rel='some other'></a></body></html>
+!The CSS selector should not match the HTML fragment because the attibute contains a space seperated list and none of its items is an exact match
+148a[rel~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 10 </title></head><body><a href='#' rel='matchother'></a></body></html>
+!The CSS selector should not match the HTML fragment because the attibute is not an exact match
+149a[rel ~= match]1<!DOCTYPE html><html><head><title>E[attribute~=value] 11 </title></head><body><a href='#' rel='match'></a></body></html>
+!The CSS selector should match the HTML fragment because the value of the rel attribute is an exact match
+150a[rel ~=match]1<!DOCTYPE html><html><head><title>E[attribute~=value] 12 </title></head><body><a href='#' rel='match'></a></body></html>
+!The CSS selector should match the HTML fragment because the value of the rel attribute is an exact match
+151a[rel~= match]1<!DOCTYPE html><html><head><title>E[attribute~=value] 13 </title></head><body><a href='#' rel='match'></a></body></html>
+!The CSS selector should match the HTML fragment because the value of the rel attribute is an exact match
+152a[title~=match]1<!DOCTYPE html><html><head><title>E[attribute~=value] 14 </title></head><body><a href='#' title='match'></a></body></html>
+!The CSS selector should match the HTML fragment because the value of the title attribute is an exact match
+153a[title~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 15 </title></head><body><a href='#' title='MATCH'></a></body></html>
+!The CSS selector should not match the HTML fragment because value of the title attribute should be compared in a case-sensitive way
+154div[id~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 16 </title></head><body><div id='MATCH'></div></body></html>
+!The CSS selector should not match the HTML fragment because value of the id attribute should be compared in a case-sensitive way
+155label[for~=match]0<!DOCTYPE html><html><head><title>E[attribute~=value] 17 </title></head><body><label for='MATCH'></label></body></html>
+!The CSS selector should not match the HTML fragment because value of the for attribute should be compared in a case-sensitive way
+156div > div1<!DOCTYPE html><html><head><title>E > F 1 </title></head><body><div>     <div></div> </div></body></html>
+!The CSS selector should match the inner div element, because it is a child of the outer div element
+157div ol > li div1<!DOCTYPE html><html><head><title>E > F 2 </title></head><body><div>     <ol>        <li>           <div></div>       </li>    </ol> </div></body></html>
+!The CSS selector should match the inner div element, because it is a descentdant of the li element which is a child of the ol element, which is a descendant of the outer div element
+158div > div0<!DOCTYPE html><html><head><title>E > F 3 </title></head><body><div>     <blockquote>        <div></div>    </blockquote> </div></body></html>
+!The CSS selector should not match the inner div element, because it is only a decendant of the outer div element
+159.class1<!DOCTYPE html><html><head><title>.class 1 </title></head><body><div class='class'></div></body></html>
+!The CSS selector should match the HTML fragment because the class is an exact match
+160.class1<!DOCTYPE html><html><head><title>.class 2 </title></head><body><div class='another class'></div></body></html>
+!The CSS selector should match the HTML fragment because the list classes contains an exact match
+161.first.second1<!DOCTYPE html><html><head><title>.class 3 </title></head><body><div class='first second'></div></body></html>
+!The CSS selector should match the HTML fragment, both specified classes match
+163.class0<!DOCTYPE html><html><head><title>.class 5 </title></head><body><div class='classy'></div></body></html>
+!The CSS selector should not match the HTML fragment because the class does not contain an exact match
+164.first.second0<!DOCTYPE html><html><head><title>.class 6 </title></head><body><div class='first'></div></body></html>
+!The CSS selector should not match the HTML fragment because only one of the two specified classes matches
+165h1 ~ p1<!DOCTYPE html><html><head><title>E ~ F 1 </title></head><body><h1></h1> <p></p></body></html>
+!The CSS selector should match the paragraph because the header is in front of and directly adjecent to the paragraph
+166h1 ~ p1<!DOCTYPE html><html><head><title>E ~ F 2 </title></head><body><h1></h1> <h2></h2> <p></p></body></html>
+!The CSS selector should match the paragraph because the header is in front of the paragraph
+167h1 ~ p0<!DOCTYPE html><html><head><title>E ~ F 3 </title></head><body><p></p> <h1></h1></body></html>
+!The CSS selector should not match the paragraph because the paragraph is in front of the header
+168div div1<!DOCTYPE html><html><head><title>E F 1 </title></head><body><div>     <div></div> </div></body></html>
+!The CSS selector should match the inner div element, because it is a child of the outer div element
+169div div1<!DOCTYPE html><html><head><title>E F 2 </title></head><body><div>     <blockquote>        <div></div>    </blockquote> </div></body></html>
+!The CSS selector should match the inner div element, because it is a descendant of the outer div element
+170blockquote1<!DOCTYPE html><html><head><title>E 1 </title></head><body><blockquote></blockquote></body></html>
+!The CSS selector should match the HTML fragment because it is the right type of element
+171blockquote0<!DOCTYPE html><html><head><title>E 2 </title></head><body><div></div></body></html>
+!The CSS selector should not match the HTML fragment because it is not the right type of element
+172:empty1<!DOCTYPE html><html><head><title>:empty 1 </title></head><body><div></div></body></html>
+!The CSS selector should match the div element, because it is empty
+173:empty1<!DOCTYPE html><html><head><title>:empty 2 </title></head><body><div><!-- Just a comment --></div></body></html>
+!The CSS selector should match the div element, because it is empty
+174:empty0<!DOCTYPE html><html><head><title>:empty 3 </title></head><body><div> </div></body></html>
+!The CSS selector should not match the div element, because it is not empty
+175:empty0<!DOCTYPE html><html><head><title>:empty 4 </title></head><body><div>     How about regular text... </div></body></html>
+!The CSS selector should not match the div element, because it is not empty
+176:empty1<!DOCTYPE html><html><head><title>:empty 5 </title></head><body><div><blockquote></blockquote></div></body></html>
+!The CSS selector should not match the div element, because it is not empty
+177div :first-child1<!DOCTYPE html><html><head><title>:first-child 1 </title></head><body><div>    <div></div> </div></body></html>
+!The CSS selector should match the inner div element, because it is the only child of the outer div element
+178div :first-child1<!DOCTYPE html><html><head><title>:first-child 2 </title></head><body><div>     <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match the inner div element, because it is the first child of the outer div element
+179div :first-child1<!DOCTYPE html><html><head><title>:first-child 3 </title></head><body><div>     <!-- Just a comment -->    <div></div> </div></body></html>
+!The CSS selector should match the inner div element, because it is the first child of the outer div element
+					Comments are not elements, so they should not be considered when determining the first child.
+180div :first-child1<!DOCTYPE html><html><head><title>:first-child 4 </title></head><body><div>     How about regular text...    <div></div> </div></body></html>
+!The CSS selector should match the inner div element, because it is the first child of the outer div element.
+					Regular text is not an element, so it should not be considered when determining the first child.
+181div :first-child1<!DOCTYPE html><html><head><title>:first-child 5 </title></head><body><div>     <blockquote></blockquote>    <div></div> </div></body></html>
+!The CSS selector should not match the inner div element, because it is the second child of the outer div element
+182div:first-of-type1<!DOCTYPE html><html><head><title>:first-of-type 1 </title></head><body><div>PASS</div></body></html>
+!The CSS selector should match the marked div element, because it is the only element of this type
+183div:first-of-type1<!DOCTYPE html><html><head><title>:first-of-type 2 </title></head><body><div>PASS</div> <div></div></body></html>
+!The CSS selector should match the marked div element, because it is the first element of this type
+184div:first-of-type1<!DOCTYPE html><html><head><title>:first-of-type 3 </title></head><body><blockquote></blockquote> <div>PASS</div></body></html>
+!The CSS selector should match the marked div element, because it is the first element of this type
+185div:first-of-type2<!DOCTYPE html><html><head><title>:first-of-type 4 </title></head><body><div></div> <blockquote>    <div>PASS</div> </blockquote></body></html>
+!The CSS selector should match the marked div element, because it is the first element of this type in this scope
+186div:first-of-type2<!DOCTYPE html><html><head><title>:first-of-type 5 </title></head><body><div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked div element, because it is the first element of this type in the current scope
+187div:first-of-type2<!DOCTYPE html><html><head><title>:first-of-type 6 </title></head><body><blockquote>    <div></div> </blockquote> <div>PASS</div></body></html>
+!The CSS selector should match the marked div element, because it is the first element of this type in the current scope
+188div:first-of-type1<!DOCTYPE html><html><head><title>:first-of-type 7 </title></head><body><div></div> <div>FAIL</div></body></html>
+!The CSS selector should not match the marked div element, because it is the second element of this type
+189div:first-of-type1<!DOCTYPE html><html><head><title>:first-of-type 8 </title></head><body><DIV></DIV> <div>FAIL</div></body></html>
+!The CSS selector should not match the marked div element, because it is the second element of this type
+190#id1<!DOCTYPE html><html><head><title>#id 1 </title></head><body><div id='id'></div></body></html>
+!The CSS selector should match the HTML fragment because the id is an exact match
+191#id0<!DOCTYPE html><html><head><title>#id 2 </title></head><body><div id='identification'></div></body></html>
+!The CSS selector should not match the HTML fragment because the id is not an exact match
+192#id0<!DOCTYPE html><html><head><title>#id 3 </title></head><body><div></div></body></html>
+!The CSS selector should not match the HTML fragment because it does not have an id
+193:lang(en)1<!DOCTYPE html><html><head><title>:lang() 1 </title></head><body><div lang='en'></div></body></html>
+!The CSS selector should match the element, because the language is an exact match
+194:lang(en)1<!DOCTYPE html><html><head><title>:lang() 2 </title></head><body><div lang='EN'></div></body></html>
+!The CSS selector should match the element, because the language is an exact match. The case of the language should not matter.
+195:lang(en)1<!DOCTYPE html><html><head><title>:lang() 3 </title></head><body><div lang='en-US'></div></body></html>
+!The CSS selector should match the element, because the first component of the language is an exact match
+196:lang(en)2<!DOCTYPE html><html><head><title>:lang() 4 </title></head><body><blockquote lang='en'>    <div></div> </blockquote></body></html>
+!The CSS selector should match the inner element, because language is inherited and the language is an exact match
+197:lang(en)2<!DOCTYPE html><html><head><title>:lang() 5 </title></head><body><blockquote lang='en-US'>    <div></div> </blockquote></body></html>
+!The CSS selector should match the inner element, because language is inherited and the first component of the language is an exact match
+198:lang(en)0<!DOCTYPE html><html><head><title>:lang() 6 </title></head><body><div></div></body></html>
+!The CSS selector should not match the element, because the language is not set
+199:lang(en)0<!DOCTYPE html><html><head><title>:lang() 7 </title></head><body><div lang=''></div></body></html>
+!The CSS selector should not match the element, because the language is empty
+200:lang(en)0<!DOCTYPE html><html><head><title>:lang() 8 </title></head><body><div lang='nl'></div></body></html>
+!The CSS selector should not match the element, because the language is different
+201:lang(en)0<!DOCTYPE html><html><head><title>:lang() 9 </title></head><body><div lang='nl-en'></div></body></html>
+!The CSS selector should not match the element, because the first component is different.
+					The second component should	not be taken into account.
+202:lang(en)0<!DOCTYPE html><html><head><title>:lang() 10 </title></head><body><div lang='enUS'></div></body></html>
+!The CSS selector should not match the element, because it does not match exactly. Because the hyphen
+					is missing we are only allowed to do an exact match.
+203:lang(en)1<!DOCTYPE html><html><head><title>:lang() 11 </title></head><body><div lang='en'>    <div lang='nl'></div> </div></body></html>
+!The CSS selector should not match the inner element, because the inherited language is overwritten
+204div :last-child1<!DOCTYPE html><html><head><title>:last-child 1 </title></head><body><div>    <div></div> </div></body></html>
+!The CSS selector should match the inner div element, because it is the only child of the outer div element
+205div :last-child1<!DOCTYPE html><html><head><title>:last-child 2 </title></head><body><div>     <blockquote></blockquote>    <div></div> </div></body></html>
+!The CSS selector should match the inner div element, because it is the last child of the outer div element
+206div :last-child1<!DOCTYPE html><html><head><title>:last-child 3 </title></head><body><div>     <div></div>    <!-- Just a comment --> </div></body></html>
+!The CSS selector should match the inner div element, because it is the last child of the outer div element
+					Comments are not elements, so they should not be considered when determining the last child.
+207div :last-child1<!DOCTYPE html><html><head><title>:last-child 4 </title></head><body><div>     <div></div>    How about regular text... </div></body></html>
+!The CSS selector should match the inner div element, because it is the last child of the outer div element.
+					Regular text is not an element, so it should not be considered when determining the last child.
+208div :last-child1<!DOCTYPE html><html><head><title>:last-child 5 </title></head><body><div>     <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the inner div element, because it is the first child of the outer div element
+209div:last-of-type1<!DOCTYPE html><html><head><title>:last-of-type 1 </title></head><body><div>PASS</div></body></html>
+!The CSS selector should match the marked div element, because it is the only element of this type
+210div:last-of-type1<!DOCTYPE html><html><head><title>:last-of-type 2 </title></head><body><div></div> <div>PASS</div></body></html>
+!The CSS selector should match the marked div element, because it is the last element of this type
+211div:last-of-type1<!DOCTYPE html><html><head><title>:last-of-type 3 </title></head><body><div>PASS</div> <blockquote></blockquote></body></html>
+!The CSS selector should match the marked div element, because it is the last element of this type
+212div:last-of-type2<!DOCTYPE html><html><head><title>:last-of-type 4 </title></head><body><blockquote>    <div>PASS</div> </blockquote> <div></div></body></html>
+!The CSS selector should match the marked div element, because it is the last element of this type in this scope
+213div:last-of-type2<!DOCTYPE html><html><head><title>:last-of-type 5 </title></head><body><div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked div element, because it is the last element of this type in the current scope
+214div:last-of-type2<!DOCTYPE html><html><head><title>:last-of-type 6 </title></head><body><div>PASS</div> <blockquote>    <div></div> </blockquote></body></html>
+!The CSS selector should match the marked div element, because it is the last element of this type in the current scope
+215div:last-of-type1<!DOCTYPE html><html><head><title>:last-of-type 7 </title></head><body><div>FAIL</div> <div></div></body></html>
+!The CSS selector should not match the marked div element, because it is the first element of this type
+216div:last-of-type1<!DOCTYPE html><html><head><title>:last-of-type 8 </title></head><body><div>FAIL</div> <DIV></DIV></body></html>
+!The CSS selector should not match the marked div element, because it is the first element of this type
+217:not(#id)5<!DOCTYPE html><html><head><title>:not() 1 </title></head><body><div></div></body></html>
+!The CSS selector should match the div element, because it is not a match for the #id selector
+218:not(.class)5<!DOCTYPE html><html><head><title>:not() 2 </title></head><body><div></div></body></html>
+!The CSS selector should match the div element, because it is not a match for the .class selector
+219:not(#id)4<!DOCTYPE html><html><head><title>:not() 3 </title></head><body><div id='id'></div></body></html>
+!The CSS selector should not match the div element, because it is a match for the #id selector
+220:not(.class)4<!DOCTYPE html><html><head><title>:not() 4 </title></head><body><div class='class'></div></body></html>
+!The CSS selector should not match the div element, because it is a match for the .class selector
+221div :nth-child(1)1<!DOCTYPE html><html><head><title>:nth-child() 1 </title></head><body><div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked element, because it is the first and only child of the outer div element
+222div :nth-child(0n+1)1<!DOCTYPE html><html><head><title>:nth-child() 2 </title></head><body><div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked element, because it is the first and only child of the outer div element
+223div :nth-child(1)1<!DOCTYPE html><html><head><title>:nth-child() 3 </title></head><body><div>    <div>PASS</div>    <div></div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the first child of the outer div element
+224div :nth-child(0n+1)1<!DOCTYPE html><html><head><title>:nth-child() 4 </title></head><body><div>    <div>PASS</div>    <div></div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the first child of the outer div element
+225div :nth-child(2)1<!DOCTYPE html><html><head><title>:nth-child() 5 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the second child of the outer div element
+226div :nth-child(0n+2)1<!DOCTYPE html><html><head><title>:nth-child() 6 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the second child of the outer div element
+227div :nth-child(1n)4<!DOCTYPE html><html><head><title>:nth-child() 7 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element should match
+228div :nth-child(n)4<!DOCTYPE html><html><head><title>:nth-child() 8 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element should match
+229div :nth-child(n+1)4<!DOCTYPE html><html><head><title>:nth-child() 9 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element should match
+230div :nth-child(1n+1)4<!DOCTYPE html><html><head><title>:nth-child() 10 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element should match
+231div :nth-child(n+2)3<!DOCTYPE html><html><head><title>:nth-child() 11 </title></head><body><div>    <div></div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element starting from the second should match
+232div :nth-child(1n+2)3<!DOCTYPE html><html><head><title>:nth-child() 12 </title></head><body><div>    <div></div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element starting from the second should match
+233div :nth-child(even)2<!DOCTYPE html><html><head><title>:nth-child() 13 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element should match
+234div :nth-child(odd)2<!DOCTYPE html><html><head><title>:nth-child() 14 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element should match
+235div :nth-child(2n)2<!DOCTYPE html><html><head><title>:nth-child() 15 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element should match
+236div :nth-child(2n-1)2<!DOCTYPE html><html><head><title>:nth-child() 16 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element should match
+237div :nth-child(2n+0)2<!DOCTYPE html><html><head><title>:nth-child() 17 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element should match
+238div :nth-child(2n+1)2<!DOCTYPE html><html><head><title>:nth-child() 18 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element should match
+239div :nth-child(2n+2)2<!DOCTYPE html><html><head><title>:nth-child() 19 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element should match
+240div :nth-child(3n+1)2<!DOCTYPE html><html><head><title>:nth-child() 20 </title></head><body><div>    <div>PASS</div>    <div></div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every third element should match
+241div :nth-child(-n+2)2<!DOCTYPE html><html><head><title>:nth-child() 21 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because the first two elements should match
+242div :nth-child(0)0<!DOCTYPE html><html><head><title>:nth-child() 22 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should match no elements at all
+243div :nth-child(0n+0)0<!DOCTYPE html><html><head><title>:nth-child() 23 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should match no elements at all
+244div :nth-child(1)1<!DOCTYPE html><html><head><title>:nth-child() 24 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the first element
+245div :nth-child(0n+1)1<!DOCTYPE html><html><head><title>:nth-child() 25 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the first element
+246div :nth-child(2)1<!DOCTYPE html><html><head><title>:nth-child() 26 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the second element
+247div :nth-child(0n+2)1<!DOCTYPE html><html><head><title>:nth-child() 27 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the second element
+248div :nth-child(n+2)3<!DOCTYPE html><html><head><title>:nth-child() 28 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked element, because every element starting from the second should match
+249div :nth-child(1n+2)3<!DOCTYPE html><html><head><title>:nth-child() 29 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked element, because every element starting from the second should match
+250div :nth-child(even)2<!DOCTYPE html><html><head><title>:nth-child() 30 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element should match
+251div :nth-child(odd)2<!DOCTYPE html><html><head><title>:nth-child() 31 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element should match
+252div :nth-child(2n)2<!DOCTYPE html><html><head><title>:nth-child() 32 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element should match
+253div :nth-child(2n-1)2<!DOCTYPE html><html><head><title>:nth-child() 33 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element should match
+254div :nth-child(2n+0)2<!DOCTYPE html><html><head><title>:nth-child() 34 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element should match
+255div :nth-child(2n+1)2<!DOCTYPE html><html><head><title>:nth-child() 35 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element should match
+256div :nth-child(2n+2)2<!DOCTYPE html><html><head><title>:nth-child() 36 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element should match
+257div :nth-child(3n+1)2<!DOCTYPE html><html><head><title>:nth-child() 37 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every third element should match
+258div :nth-child(-n+2)2<!DOCTYPE html><html><head><title>:nth-child() 38 </title></head><body><div>    <div></div>    <div></div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because only the first two should match
+259div :nth-last-child(1)1<!DOCTYPE html><html><head><title>:nth-last-child() 1 </title></head><body><div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked element, because it is the last and only child of the outer div element
+260div :nth-last-child(0n+1)1<!DOCTYPE html><html><head><title>:nth-last-child() 2 </title></head><body><div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked element, because it is the last and only child of the outer div element
+261div :nth-last-child(1)1<!DOCTYPE html><html><head><title>:nth-last-child() 3 </title></head><body><div>    <div></div>    <div></div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked element, because it is the last child of the outer div element
+262div :nth-last-child(0n+1)1<!DOCTYPE html><html><head><title>:nth-last-child() 4 </title></head><body><div>    <div></div>    <div></div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked element, because it is the last child of the outer div element
+263div :nth-last-child(2)1<!DOCTYPE html><html><head><title>:nth-last-child() 5 </title></head><body><div>    <div></div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the second child from the bottom of the outer div element
+264div :nth-last-child(0n+2)1<!DOCTYPE html><html><head><title>:nth-last-child() 6 </title></head><body><div>    <div></div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the second child from the bottom of the outer div element
+265div :nth-last-child(1n)4<!DOCTYPE html><html><head><title>:nth-last-child() 7 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element should match
+266div :nth-last-child(n)4<!DOCTYPE html><html><head><title>:nth-last-child() 8 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element should match
+267div :nth-last-child(n+1)4<!DOCTYPE html><html><head><title>:nth-last-child() 9 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element should match
+268div :nth-last-child(1n+1)4<!DOCTYPE html><html><head><title>:nth-last-child() 10 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element should match
+269div :nth-last-child(n+2)3<!DOCTYPE html><html><head><title>:nth-last-child() 11 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every element before the second from the bottom should match
+270div :nth-last-child(1n+2)3<!DOCTYPE html><html><head><title>:nth-last-child() 12 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every element before the second from the bottom should match
+271div :nth-last-child(even)2<!DOCTYPE html><html><head><title>:nth-last-child() 13 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element counting from the bottom should match
+272div :nth-last-child(odd)2<!DOCTYPE html><html><head><title>:nth-last-child() 14 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element counting from the bottom should match
+273div :nth-last-child(2n)2<!DOCTYPE html><html><head><title>:nth-last-child() 15 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element counting from the bottom should match
+274div :nth-last-child(2n-1)2<!DOCTYPE html><html><head><title>:nth-last-child() 16 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element counting from the bottom should match
+275div :nth-last-child(2n+0)2<!DOCTYPE html><html><head><title>:nth-last-child() 17 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element counting from the bottom should match
+276div :nth-last-child(2n+1)2<!DOCTYPE html><html><head><title>:nth-last-child() 18 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element counting from the bottom should match
+277div :nth-last-child(2n+2)2<!DOCTYPE html><html><head><title>:nth-last-child() 19 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element counting from the bottom should match
+278div :nth-last-child(3n+1)2<!DOCTYPE html><html><head><title>:nth-last-child() 20 </title></head><body><div>    <div>PASS</div>    <div></div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every third element should match counting from the first from bottom
+279div :nth-last-child(-n+2)2<!DOCTYPE html><html><head><title>:nth-last-child() 21 </title></head><body><div>    <div></div>    <div></div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because the last two elements should match
+280div :nth-last-child(0)0<!DOCTYPE html><html><head><title>:nth-last-child() 22 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should match no elements at all
+281div :nth-last-child(0n+0)0<!DOCTYPE html><html><head><title>:nth-last-child() 23 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should match no elements at all
+282div :nth-last-child(1)1<!DOCTYPE html><html><head><title>:nth-last-child() 24 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the last element
+283div :nth-last-child(0n+1)1<!DOCTYPE html><html><head><title>:nth-last-child() 25 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the last element
+284div :nth-last-child(2)1<!DOCTYPE html><html><head><title>:nth-last-child() 26 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the second element from the bottom
+285div :nth-last-child(0n+2)1<!DOCTYPE html><html><head><title>:nth-last-child() 27 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the second element from the bottom
+286div :nth-last-child(n+2)3<!DOCTYPE html><html><head><title>:nth-last-child() 28 </title></head><body><div>    <div></div>    <div></div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked element, because every element starting from the second from the bottom should match
+287div :nth-last-child(1n+2)3<!DOCTYPE html><html><head><title>:nth-last-child() 29 </title></head><body><div>    <div></div>    <div></div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked element, because every element starting from the second from the bottom should match
+288div :nth-last-child(even)2<!DOCTYPE html><html><head><title>:nth-last-child() 30 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element counting from the bottom should match
+289div :nth-last-child(odd)2<!DOCTYPE html><html><head><title>:nth-last-child() 31 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element counting from the bottom should match
+290div :nth-last-child(2n)2<!DOCTYPE html><html><head><title>:nth-last-child() 32 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element counting from the bottom should match
+291div :nth-last-child(2n-1)2<!DOCTYPE html><html><head><title>:nth-last-child() 33 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element counting from the bottom should match
+292div :nth-last-child(2n+0)2<!DOCTYPE html><html><head><title>:nth-last-child() 34 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element counting from the bottom should match
+293div :nth-last-child(2n+1)2<!DOCTYPE html><html><head><title>:nth-last-child() 35 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element counting from the bottom should match
+294div :nth-last-child(2n+2)2<!DOCTYPE html><html><head><title>:nth-last-child() 36 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element counting from the bottom should match
+295div :nth-last-child(3n+1)2<!DOCTYPE html><html><head><title>:nth-last-child() 37 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every third element counting from the first of the bottom should match
+296div :nth-last-child(-n+2)2<!DOCTYPE html><html><head><title>:nth-last-child() 38 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because only the last two should match
+297div div:nth-last-of-type(1)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 1 </title></head><body><div>    <div>PASS</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match the marked element, because it is the last and only child of the correct type
+298div div:nth-last-of-type(0n+1)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 2 </title></head><body><div>    <div>PASS</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match the marked element, because it is the last and only child of the correct type
+299div div:nth-last-of-type(1)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 3 </title></head><body><div>    <div></div>    <div></div>    <div></div>    <div>PASS</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match the marked element, because it is the last child of the correct type
+300div div:nth-last-of-type(0n+1)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 4 </title></head><body><div>    <div></div>    <div></div>    <div></div>    <div>PASS</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match the marked element, because it is the last child of the correct type
+301div div:nth-last-of-type(2)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 5 </title></head><body><div>    <div></div>    <div></div>    <div>PASS</div>    <blockquote></blockquote>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the second child from the bottom of the correct type
+302div div:nth-last-of-type(0n+2)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 6 </title></head><body><div>    <div></div>    <div></div>    <div>PASS</div>    <blockquote></blockquote>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the second child from the bottom of the correct type
+303div div:nth-last-of-type(1n)4<!DOCTYPE html><html><head><title>:nth-last-of-type() 7 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type should match
+304div div:nth-last-of-type(n)4<!DOCTYPE html><html><head><title>:nth-last-of-type() 8 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type should match
+305div div:nth-last-of-type(n+1)4<!DOCTYPE html><html><head><title>:nth-last-of-type() 9 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type should match
+306div div:nth-last-of-type(1n+1)4<!DOCTYPE html><html><head><title>:nth-last-of-type() 10 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type should match
+307div div:nth-last-of-type(n+2)3<!DOCTYPE html><html><head><title>:nth-last-of-type() 11 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type before the second from the bottom should match
+308div div:nth-last-of-type(1n+2)3<!DOCTYPE html><html><head><title>:nth-last-of-type() 12 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type before the second from the bottom should match
+309div div:nth-last-of-type(even)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 13 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match all marked elements, because every even element of the correct type counting from the bottom should match
+310div div:nth-last-of-type(odd)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 14 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element of the correct type counting from the bottom should match
+311div div:nth-last-of-type(2n)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 15 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match all marked elements, because every even element of the correct type counting from the bottom should match
+312div div:nth-last-of-type(2n-1)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 16 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element of the correct type counting from the bottom should match
+313div div:nth-last-of-type(2n+0)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 17 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match all marked elements, because every even element of the correct type counting from the bottom should match
+314div div:nth-last-of-type(2n+1)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 18 </title></head><body><div>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element of the correct type counting from the bottom should match
+315div div:nth-last-of-type(2n+2)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 19 </title></head><body><div>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match all marked elements, because every even element of the correct type counting from the bottom should match
+316div div:nth-last-of-type(3n+1)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 20 </title></head><body><div>    <div>PASS</div>    <div></div>    <blockquote></blockquote>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every third element of the correct type should match counting from the first from bottom
+317div div:nth-last-of-type(-n+2)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 21 </title></head><body><div>    <div></div>    <div></div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should match all marked elements, because the last two elements of the correct type should match
+318div div:nth-last-of-type(0)0<!DOCTYPE html><html><head><title>:nth-last-of-type() 22 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should match no elements at all
+319div div:nth-last-of-type(0n+0)0<!DOCTYPE html><html><head><title>:nth-last-of-type() 23 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should match no elements at all
+320div div:nth-last-of-type(1)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 24 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the last element of the correct type
+321div div:nth-last-of-type(0n+1)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 25 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the last element of the correct type
+322div div:nth-last-of-type(2)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 26 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the second element of the correct type from the bottom
+323div div:nth-last-of-type(0n+2)1<!DOCTYPE html><html><head><title>:nth-last-of-type() 27 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the second element of the correct type from the bottom
+324div div:nth-last-of-type(n+2)3<!DOCTYPE html><html><head><title>:nth-last-of-type() 28 </title></head><body><div>    <div></div>    <div></div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked element, because every element starting from the second of the correct type from the bottom should match
+325div div:nth-last-of-type(1n+2)3<!DOCTYPE html><html><head><title>:nth-last-of-type() 29 </title></head><body><div>    <div></div>    <div></div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked element, because every element starting from the second element of the correct type from the bottom should match
+326div div:nth-last-of-type(even)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 30 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element of the correct type counting from the bottom should match
+327div div:nth-last-of-type(odd)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 31 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element of the correct type counting from the bottom should match
+328div div:nth-last-of-type(2n)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 32 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element of the correct type counting from the bottom should match
+329div div:nth-last-of-type(2n-1)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 33 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element of the correct type counting from the bottom should match
+330div div:nth-last-of-type(2n+0)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 34 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element of the correct type counting from the bottom should match
+331div div:nth-last-of-type(2n+1)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 35 </title></head><body><div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element of the correct type counting from the bottom should match
+332div div:nth-last-of-type(2n+2)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 36 </title></head><body><div>    <div></div>    <div>FAIL</div>    <div></div>    <div>FAIL</div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element of the correct type counting from the bottom should match
+333div div:nth-last-of-type(3n+1)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 37 </title></head><body><div>    <div></div>    <div>FAIL</div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every third element of the correct type counting from the first of the bottom should match
+334div div:nth-last-of-type(-n+2)2<!DOCTYPE html><html><head><title>:nth-last-of-type() 38 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <blockquote></blockquote>    <div></div>    <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the marked elements, because only the last two elements of the correct type should match
+335div div:nth-of-type(1)1<!DOCTYPE html><html><head><title>:nth-of-type() 1 </title></head><body><div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked element, because it is the first and only child of the correct type
+336div div:nth-of-type(0n+1)1<!DOCTYPE html><html><head><title>:nth-of-type() 2 </title></head><body><div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match the marked element, because it is the first and only child of the correct type
+337div div:nth-of-type(1)1<!DOCTYPE html><html><head><title>:nth-of-type() 3 </title></head><body><div>    <blockquote></blockquote>    <div>PASS</div>    <div></div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the first child of the correct type
+338div div:nth-of-type(0n+1)1<!DOCTYPE html><html><head><title>:nth-of-type() 4 </title></head><body><div>    <blockquote></blockquote>    <div>PASS</div>    <div></div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the first child of the correct type
+339div div:nth-of-type(2)1<!DOCTYPE html><html><head><title>:nth-of-type() 5 </title></head><body><div>    <div></div>    <blockquote></blockquote>    <div>PASS</div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the second child of the correct type
+340div div:nth-of-type(0n+2)1<!DOCTYPE html><html><head><title>:nth-of-type() 6 </title></head><body><div>    <div></div>    <blockquote></blockquote>    <div>PASS</div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match the marked element, because it is the second child of the correct type
+341div div:nth-of-type(1n)4<!DOCTYPE html><html><head><title>:nth-of-type() 7 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type should match
+342div div:nth-of-type(n)4<!DOCTYPE html><html><head><title>:nth-of-type() 8 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type should match
+343div div:nth-of-type(n+1)4<!DOCTYPE html><html><head><title>:nth-of-type() 9 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type should match
+344div div:nth-of-type(1n+1)4<!DOCTYPE html><html><head><title>:nth-of-type() 10 </title></head><body><div>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type should match
+345div div:nth-of-type(n+2)3<!DOCTYPE html><html><head><title>:nth-of-type() 11 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type starting from the second should match
+346div div:nth-of-type(1n+2)3<!DOCTYPE html><html><head><title>:nth-of-type() 12 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every element of the correct type starting from the second should match
+347div div:nth-of-type(even)2<!DOCTYPE html><html><head><title>:nth-of-type() 13 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element of the correct type should match
+348div div:nth-of-type(odd)2<!DOCTYPE html><html><head><title>:nth-of-type() 14 </title></head><body><div>    <blockquote></blockquote>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element of the correct type should match
+349div div:nth-of-type(2n)2<!DOCTYPE html><html><head><title>:nth-of-type() 15 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element of the correct type should match
+350div div:nth-of-type(2n-1)2<!DOCTYPE html><html><head><title>:nth-of-type() 16 </title></head><body><div>    <blockquote></blockquote>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element of the correct type should match
+351div div:nth-of-type(2n+0)2<!DOCTYPE html><html><head><title>:nth-of-type() 17 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element of the correct type should match
+352div div:nth-of-type(2n+1)2<!DOCTYPE html><html><head><title>:nth-of-type() 18 </title></head><body><div>    <blockquote></blockquote>    <div>PASS</div>    <div></div>    <div>PASS</div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because every odd element of the correct type should match
+353div div:nth-of-type(2n+2)2<!DOCTYPE html><html><head><title>:nth-of-type() 19 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>PASS</div>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every even element of the correct type should match
+354div div:nth-of-type(3n+1)2<!DOCTYPE html><html><head><title>:nth-of-type() 20 </title></head><body><div>    <div>PASS</div>    <div></div>    <blockquote></blockquote>    <div></div>    <div>PASS</div> </div></body></html>
+!The CSS selector should match all marked elements, because every third element of the correct type should match
+355div div:nth-of-type(-n+2)2<!DOCTYPE html><html><head><title>:nth-of-type() 21 </title></head><body><div>    <blockquote></blockquote>    <div>PASS</div>    <div>PASS</div>    <blockquote></blockquote>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should match all marked elements, because the first two elements of the correct type should match
+356div div:nth-of-type(0)0<!DOCTYPE html><html><head><title>:nth-of-type() 22 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should match no elements at all
+357div div:nth-of-type(0n+0)0<!DOCTYPE html><html><head><title>:nth-of-type() 23 </title></head><body><div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should match no elements at all
+358div div:nth-of-type(1)1<!DOCTYPE html><html><head><title>:nth-of-type() 24 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the first element of the correct type
+359div div:nth-of-type(0n+1)1<!DOCTYPE html><html><head><title>:nth-of-type() 25 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the first element of the correct type
+360div div:nth-of-type(2)1<!DOCTYPE html><html><head><title>:nth-of-type() 26 </title></head><body><div>    <div>FAIL</div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the second element of the correct type
+361div div:nth-of-type(0n+2)1<!DOCTYPE html><html><head><title>:nth-of-type() 27 </title></head><body><div>    <div>FAIL</div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because it should only match the second element of the correct type
+362div div:nth-of-type(n+2)3<!DOCTYPE html><html><head><title>:nth-of-type() 28 </title></head><body><div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked element, because every element of the correct type starting from the second should match
+363div div:nth-of-type(1n+2)3<!DOCTYPE html><html><head><title>:nth-of-type() 29 </title></head><body><div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div>    <div></div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked element, because every element of the correct type starting from the second should match
+364div div:nth-of-type(even)2<!DOCTYPE html><html><head><title>:nth-of-type() 30 </title></head><body><div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element of the correct type should match
+365div div:nth-of-type(odd)2<!DOCTYPE html><html><head><title>:nth-of-type() 31 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element of the correct type should match
+366div div:nth-of-type(2n)2<!DOCTYPE html><html><head><title>:nth-of-type() 32 </title></head><body><div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element of the correct type should match
+367div div:nth-of-type(2n-1)2<!DOCTYPE html><html><head><title>:nth-of-type() 33 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element of the correct type should match
+368div div:nth-of-type(2n+0)2<!DOCTYPE html><html><head><title>:nth-of-type() 34 </title></head><body><div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element of the correct type should match
+369div div:nth-of-type(2n+1)2<!DOCTYPE html><html><head><title>:nth-of-type() 35 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div>    <blockquote></blockquote>    <div></div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because every odd element of the correct type should match
+370div div:nth-of-type(2n+2)2<!DOCTYPE html><html><head><title>:nth-of-type() 36 </title></head><body><div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every even element of the correct type should match
+371div div:nth-of-type(3n+1)2<!DOCTYPE html><html><head><title>:nth-of-type() 37 </title></head><body><div>    <div></div>    <div>FAIL</div>    <blockquote></blockquote>    <div>FAIL</div>    <div></div> </div></body></html>
+!The CSS selector should not match the marked elements, because every third element of the correct type should match
+372div div:nth-of-type(-n+2)2<!DOCTYPE html><html><head><title>:nth-of-type() 38 </title></head><body><div>    <blockquote></blockquote>    <div></div>    <div></div>    <blockquote></blockquote>    <div>FAIL</div>    <div>FAIL</div> </div></body></html>
+!The CSS selector should not match the marked elements, because only the first two elements of the correct type should match
+373div :only-child1<!DOCTYPE html><html><head><title>:only-child 1 </title></head><body><div>    <div></div> </div></body></html>
+!The CSS selector should match the inner div element, because it is the only child of the outer div element
+374div :only-child1<!DOCTYPE html><html><head><title>:only-child 2 </title></head><body><div>    <div></div>    <!-- Just a comment --> </div></body></html>
+!The CSS selector should match the inner div element, because it is the only child of the outer div element
+375div :only-child1<!DOCTYPE html><html><head><title>:only-child 3 </title></head><body><div>    <div></div>    How about regular text... </div></body></html>
+!The CSS selector should match the inner div element, because it is the only child of the outer div element
+376div :only-child0<!DOCTYPE html><html><head><title>:only-child 4 </title></head><body><div>     <div></div>    <blockquote></blockquote> </div></body></html>
+!The CSS selector should not match the inner div element, because it not the only child
+377div:only-of-type1<!DOCTYPE html><html><head><title>:only-of-type 1 </title></head><body><div>PASS</div></body></html>
+!The CSS selector should match the marked div element, because it is the only element of this type
+378div:only-of-type1<!DOCTYPE html><html><head><title>:only-of-type 2 </title></head><body><div>PASS</div> <blockquote></blockquote></body></html>
+!The CSS selector should match the marked div element, because it is the only element of this type
+379div:only-of-type2<!DOCTYPE html><html><head><title>:only-of-type 3 </title></head><body><div>PASS</div> <blockquote>    <div></div> </blockquote></body></html>
+!The CSS selector should match the marked div element, because it is the only element of this type in this scope
+380div:only-of-type0<!DOCTYPE html><html><head><title>:only-of-type 4 </title></head><body><div>FAIL</div> <div></div></body></html>
+!The CSS selector should not match the marked div element, because it is not the only element of this type
+381:root1<!DOCTYPE html><html><head><title>:root 1 </title></head><body><html>    <body>    </body> </html></body></html>
+!The CSS selector should match the HTML element, because it is the root element in a HTML document.
+382:target5<!DOCTYPE html><html><head><title>:target 1 </title></head><body><div id='target'></div></body></html>
+!The CSS selector should match the div element, because its id is equal to the target fragment of the URL
+383:target5<!DOCTYPE html><html><head><title>:target 2 </title></head><body><div id='other'></div></body></html>
+!The CSS selector should not match the div element, because its id is not equal to the target fragment of the URL
+384:target5<!DOCTYPE html><html><head><title>:target 3 </title></head><body><div></div></body></html>
+!The CSS selector should not match the div element, because it does not have an id
